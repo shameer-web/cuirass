@@ -26,7 +26,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(array('middleware' => 'auth','middleware' => 'is_admin','prefix'=>'admin','namespace'=>'Admin'), function()
 {   
-    Route::get('/', 'DashboardController@index')->name('admin.dashboard.index');;
+    Route::get('/', 'DashboardController@index')->name('admin.dashboard.index');
+    Route::resource('product','ProductController');
+    Route::resource('product-category','ProductCategoryController');
    
 
 
@@ -47,9 +49,9 @@ Route::get('/', 'DashboardController@index')->name('vendor.dashboard.index');
 
 
 
-Route::get('assets/image/offer/banners/{filename}', function ($filename)
+Route::get('assets/image/category/{filename}', function ($filename)
 {
-    $path = storage_path('app/offer/banners/' . $filename);
+    $path = storage_path('app/category/' . $filename);
     if (!File::exists($path)) {
         abort(404);
     }
@@ -59,6 +61,24 @@ Route::get('assets/image/offer/banners/{filename}', function ($filename)
     $response->header("Content-Type", $type);
     return $response;
 });
+
+
+Route::get('assets/image/product/{filename}', function ($filename)
+{
+    $path = storage_path('app/product/' . $filename);
+    if (!File::exists($path)) {
+        abort(404);
+    }
+    $file = File::get($path);
+    $type = File::mimeType($path);
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+    return $response;
+});
+
+
+
+
 
 
 
